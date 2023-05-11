@@ -104,6 +104,14 @@ namespace dlib
                   when the return value of part() is equal to OBJECT_PART_NOT_PRESENT. 
                   This is useful for modeling object parts that are not always observed.
         !*/
+
+        bool operator==(
+            const full_object_detection& rhs
+        ) const;
+        /*!
+            ensures
+                - returns true if and only if *this and rhs have identical state.
+        !*/
     };
 
 // ----------------------------------------------------------------------------------------
@@ -138,9 +146,101 @@ namespace dlib
     !*/
 
 // ----------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------
+
+    struct mmod_rect
+    {
+        /*!
+            WHAT THIS OBJECT REPRESENTS
+                This is a simple struct that is used to give training data and receive detections
+                from the Max-Margin Object Detection loss layer loss_mmod_ object.
+        !*/
+
+        mmod_rect() = default; 
+        mmod_rect(const rectangle& r) : rect(r) {}
+        mmod_rect(const rectangle& r, double score) : rect(r),detection_confidence(score) {}
+        mmod_rect(const rectangle& r, double score, const std::string& label) : rect(r),detection_confidence(score),label(label) {}
+
+        rectangle rect;
+        double detection_confidence = 0;
+        bool ignore = false;
+        std::string label;
+
+        operator rectangle() const { return rect; }
+
+        bool operator == (const mmod_rect& rhs) const;
+        /*!
+            ensures
+                - returns true if and only if all the elements of this object compare equal
+                  to the corresponding elements of rhs.
+        !*/
+    };
+
+    mmod_rect ignored_mmod_rect(
+        const rectangle& r
+    );
+    /*!
+        ensures
+            - returns a mmod_rect R such that:
+                - R.rect == r
+                - R.ignore == true
+                - R.detection_confidence == 0
+                - R.label == ""
+    !*/
+
+    void serialize(const mmod_rect& item, std::ostream& out);
+    void deserialize(mmod_rect& item, std::istream& in);
+    /*!
+        provides serialization support
+    !*/
+
+// ----------------------------------------------------------------------------------------
+
+    struct yolo_rect
+    {
+        /*!
+            WHAT THIS OBJECT REPRESENTS
+                This is a simple struct that is used to give training data and receive detections
+                from the YOLO Detection loss layer loss_yolo_ object.
+        !*/
+
+        yolo_rect() = default;
+        yolo_rect(const drectangle& r) : rect(r) {}
+        yolo_rect(const drectangle& r, double score) : rect(r),detection_confidence(score) {}
+        yolo_rect(const drectangle& r, double score, const std::string& label) : rect(r),detection_confidence(score), label(label) {}
+        yolo_rect(const mmod_rect& r) : rect(r.rect), detection_confidence(r.detection_confidence), ignore(r.ignore), label(r.label) {}
+
+        drectangle rect;
+        double detection_confidence = 0;
+        bool ignore = false;
+        std::string label;
+        // YOLO detectors are multi label detectors: this field will contain all confidences and labels for a particular detection
+        std::vector<std::pair<double, std::string>> labels;
+
+        operator rectangle() const { return rect; }
+        bool operator== (const yolo_rect& rhs) const;
+        /*!
+            ensures
+                - returns true if and only if rect == rhs.rect && detection_confidence == rhs.detection_confidence && label == rhs.label.
+        !*/
+
+        bool operator<(const yolo_rect& rhs) const
+        /*!
+            ensures
+                - returns true if and only if detection_confidence < rhs.detection_confidence.
+        !*/
+
+    };
+
+    inline void serialize(const yolo_rect& item, std::ostream& out);
+    inline void deserialize(yolo_rect& item, std::istream& in);
+    /*!
+        provides serialization support
+    !*/
+
+// ----------------------------------------------------------------------------------------
 
 }
 
 #endif // DLIB_FULL_OBJECT_DeTECTION_ABSTRACT_Hh_
-
 

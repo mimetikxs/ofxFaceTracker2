@@ -47,12 +47,12 @@ namespace dlib
                 - if (current_element_valid()) then
                     - element() == mp
         !*/
-        
+       
         class mpair : public map_pair<domain,range>
         {
         public:
-            const domain* d;
-            range* r;
+            const domain* d = nullptr;
+            range* r = nullptr;
 
             const domain& key( 
             ) const { return *d; }
@@ -157,7 +157,7 @@ namespace dlib
             );
     
             // functions from the enumerable interface
-            inline unsigned long size (
+            inline size_t size (
             ) const;
 
             inline bool at_start (
@@ -433,7 +433,7 @@ namespace dlib
         typename range,
         typename compare
         >
-    unsigned long static_map_kernel_1<domain,range,compare>::
+    size_t static_map_kernel_1<domain,range,compare>::
     size (
     ) const
     {

@@ -53,6 +53,23 @@ namespace dlib
 
 // ----------------------------------------------------------------------------------------
 
+    bool directory_exists (
+        const std::string& dirname
+    )
+    {
+        try
+        {
+            dlib::directory temp(dirname);
+            return true;
+        }
+        catch (directory::dir_not_found&)
+        {
+            return false;
+        }
+    }
+
+// ----------------------------------------------------------------------------------------
+
     directory get_parent_directory (
         const directory& dir
     )
@@ -70,7 +87,7 @@ namespace dlib
             return directory();
 
         std::string::size_type pos = f.full_name().find_last_of("\\/");
-        
+
         if (pos == std::string::npos)
             return directory();
 
@@ -79,9 +96,40 @@ namespace dlib
 
 // ----------------------------------------------------------------------------------------
 
+    std::string select_oldest_file (
+        const std::string& filename1,
+        const std::string& filename2
+    )
+    {
+        file f1, f2;
+        try{f1 = file(filename1);} catch(file::file_not_found&) { return filename1; }
+        try{f2 = file(filename2);} catch(file::file_not_found&) { return filename2; }
+
+        if (f1.last_modified() < f2.last_modified())
+            return filename1;
+        else
+            return filename2;
+    }
+
+// ----------------------------------------------------------------------------------------
+
+    std::string select_newest_file (
+        const std::string& filename1,
+        const std::string& filename2
+    )
+    {
+        file f1, f2;
+        try{f1 = file(filename1);} catch(file::file_not_found&) { return filename2; }
+        try{f2 = file(filename2);} catch(file::file_not_found&) { return filename1; }
+
+        if (f1.last_modified() > f2.last_modified())
+            return filename1;
+        else
+            return filename2;
+    }
+
+// ----------------------------------------------------------------------------------------
+
 }
 
 #endif // DLIB_DIR_NAV_EXTENSIONs_CPP_
-
-
-

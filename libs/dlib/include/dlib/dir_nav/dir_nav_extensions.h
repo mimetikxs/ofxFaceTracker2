@@ -8,7 +8,7 @@
 #include <algorithm>
 #include "dir_nav_extensions_abstract.h"
 #include "../dir_nav.h"
-#include "dlib/string.h"
+#include "../string.h"
 
 namespace dlib
 {
@@ -17,6 +17,12 @@ namespace dlib
 
     bool file_exists (
         const std::string& filename
+    );
+
+// ----------------------------------------------------------------------------------------
+
+    bool directory_exists (
+        const std::string& dirname
     );
 
 // ----------------------------------------------------------------------------------------
@@ -144,6 +150,20 @@ namespace dlib
 
     directory get_parent_directory (
         const file& f
+    );
+
+// ----------------------------------------------------------------------------------------
+
+    std::string select_oldest_file (
+        const std::string& filename1,
+        const std::string& filename2
+    );
+
+// ----------------------------------------------------------------------------------------
+
+    std::string select_newest_file (
+        const std::string& filename1,
+        const std::string& filename2
     );
 
 // ----------------------------------------------------------------------------------------

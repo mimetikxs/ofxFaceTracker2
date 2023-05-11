@@ -25,6 +25,19 @@ namespace dlib
 
 // ----------------------------------------------------------------------------------------
 
+    bool directory_exists (
+        const std::string& dirname
+    );
+    /*!
+        ensures
+            - if (a directory with the given dirname exists) then
+                - returns true
+            - else
+                - returns false
+    !*/
+
+// ----------------------------------------------------------------------------------------
+
     template <typename T>
     const std::vector<file> get_files_in_directory_tree (
         const directory& top_of_tree,
@@ -163,6 +176,35 @@ namespace dlib
                 - returns the directory which contains the given file
             - else
                 - returns a default initialized directory (i.e. directory())
+    !*/
+
+// ----------------------------------------------------------------------------------------
+
+    std::string select_oldest_file (
+        const std::string& filename1,
+        const std::string& filename2
+    );
+    /*!
+        ensures
+            - Checks the last modification times of the two given files and returns the
+              filename of the oldest file, i.e., the file that has gone longest since being
+              modified.  Ties are broken arbitrarily. 
+            - For the purpose of comparison, a file that doesn't exist is presumed to have
+              a last modification time of -infinity (i.e. very far in the past).
+    !*/
+
+// ----------------------------------------------------------------------------------------
+
+    std::string select_newest_file (
+        const std::string& filename1,
+        const std::string& filename2
+    );
+    /*!
+        ensures
+            - Checks the last modification times of the two given files and returns the
+              filename that was most recently modified.  Ties are broken arbitrarily. 
+            - For the purpose of comparison, a file that doesn't exist is presumed to have
+              a last modification time of -infinity (i.e. very far in the past).
     !*/
 
 // ----------------------------------------------------------------------------------------

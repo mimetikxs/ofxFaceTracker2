@@ -10,7 +10,7 @@
 #include "../compress_stream.h"
 #include "../base64.h"
 #include "../xml_parser.h"
-#include "dlib/string.h"
+#include "../string.h"
 
 // ----------------------------------------------------------------------------------------
 
@@ -60,7 +60,13 @@ namespace dlib
             fout << "<images>\n";
             for (unsigned long i = 0; i < images.size(); ++i)
             {
-                fout << "  <image file='" << images[i].filename << "'>\n";
+                fout << "  <image file='" << images[i].filename << "'";
+                if (images[i].width != 0 && images[i].height != 0)
+                {
+                    fout << " width='" << images[i].width << "'";
+                    fout << " height='" << images[i].height << "'";
+                }
+                fout << ">\n";
 
                 // save all the boxes
                 for (unsigned long j = 0; j < images[i].boxes.size(); ++j)
@@ -80,6 +86,16 @@ namespace dlib
                         fout << " ignore='" << b.ignore << "'";
                     if (b.angle != 0)
                         fout << " angle='" << b.angle << "'";
+                    if (b.age != 0)
+                        fout << " age='" << b.age << "'";
+                    if (b.gender == FEMALE)
+                        fout << " gender='female'";
+                    else if (b.gender == MALE)
+                        fout << " gender='male'";
+                    if (b.pose != 0)
+                        fout << " pose='" << b.pose << "'";
+                    if (b.detection_score != 0)
+                        fout << " detection_score='" << b.detection_score << "'";
 
                     if (b.has_label() || b.parts.size() != 0)
                     {
@@ -192,6 +208,20 @@ namespace dlib
                         if (atts.is_in_list("occluded"))  temp_box.occluded  = sa = atts["occluded"];
                         if (atts.is_in_list("ignore"))  temp_box.ignore  = sa = atts["ignore"];
                         if (atts.is_in_list("angle"))  temp_box.angle  = sa = atts["angle"];
+                        if (atts.is_in_list("age"))  temp_box.age  = sa = atts["age"];
+                        if (atts.is_in_list("gender"))  
+                        {
+                            if (atts["gender"] == "male")
+                                temp_box.gender = MALE;
+                            else if (atts["gender"] == "female")
+                                temp_box.gender = FEMALE;
+                            else if (atts["gender"] == "unknown")
+                                temp_box.gender = UNKNOWN;
+                            else
+                                throw dlib::error("Invalid gender string in box attribute.");
+                        }
+                        if (atts.is_in_list("pose"))  temp_box.pose  = sa = atts["pose"];
+                        if (atts.is_in_list("detection_score"))  temp_box.detection_score  = sa = atts["detection_score"];
 
                         temp_box.rect.bottom() += temp_box.rect.top()-1;
                         temp_box.rect.right() += temp_box.rect.left()-1;
@@ -227,6 +257,9 @@ namespace dlib
 
                         if (atts.is_in_list("file")) temp_image.filename = atts["file"];
                         else throw dlib::error("<image> missing required attribute 'file'");
+
+                        if (atts.is_in_list("width")) temp_image.width = sa = atts["width"];
+                        if (atts.is_in_list("height")) temp_image.height = sa = atts["height"];
                     }
 
                     ts.push_back(name);
