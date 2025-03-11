@@ -63,6 +63,7 @@ vector<int> ofxFaceTracker2Landmarks::getFeatureIndices(Feature feature) {
             return vector<int>(faceOutline, faceOutline + 27);
         }
         case ALL_FEATURES: return consecutive(0, 68);
+        default: return vector<int>{0};
     }
 }
 
@@ -71,9 +72,8 @@ template <class T>
 ofPolyline ofxFaceTracker2Landmarks::getFeature(Feature feature, vector<T> points) const {
     ofPolyline polyline;
     vector<int> indices = getFeatureIndices(feature);
-    for(int i = 0; i < indices.size(); i++) {
+    for(size_t i = 0; i < indices.size(); i++) {
         int cur = indices[i];
-        glm::vec2 pt = toGlm(points[cur]);
         polyline.addVertex({points[cur].x, points[cur].y, 0.f});
     }
     switch(feature) {

@@ -43,3 +43,5 @@ gradlew.bat
 gradle
 res
 
+.vscode
+*.code-workspace
