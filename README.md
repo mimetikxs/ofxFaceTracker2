@@ -8,7 +8,13 @@ The structure of this addon is heavily inspired by [ofxFaceTracker](https://gith
 - **Pose estimation** - estimates the 3d position and orientation of the head. Allows you to easily draw in a 3d space relative to a head's position and orientation, and estimate the direction a head is facing. 
 
 ## Platforms
-Currently ofxFaceTracker2 is built and tested on **OSX** and **Android**, but dlib is crossplatform, so it should be possible to [build](http://dlib.net/compile.html) for all other major platforms. The current builds are done with [Apothecary](https://github.com/openframeworks/openFrameworks/tree/master/scripts/apothecary)
+ofxFaceTracker2 is built on:
+- **Linux** (tested on Ubuntu)
+- **Windows** ([@shiyuugohirao](https://github.com/shiyuugohirao/ofxFaceTracker2), tested)
+- **OSX** (old, untested)
+- **Android** (old, untested) 
+
+*The old OSX and Android builds are done with [Apothecary](https://github.com/openframeworks/openFrameworks/tree/master/scripts/apothecary). Dlib is crossplatform, it should be possible to [build](http://dlib.net/compile.html) for all major platforms.*
 
 ## Comparison to [ofxFaceTracker](https://github.com/kylemcdonald/ofxFaceTracker)
 The algorithms doing the tracking are very different. In the old **ofxFaceTracker** addon based on Jason Saragih's FaceTracker library, the face detection and landmark detection happens in the same algorithm. 
